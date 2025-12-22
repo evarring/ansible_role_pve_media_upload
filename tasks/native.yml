@@ -1,0 +1,21 @@
+---
+- name: Download template files from the internet
+  community.proxmox.proxmox_template:
+    api_host: "{{ ansible_host }}"
+    api_user: "{{ ansible_user }}@pam"
+    api_password: "{{ ansible_password }}"
+    validate_certs: false
+    node: "{{ inventory_hostname.split('.')[0] }}"
+    storage: "{{ item.storage | default('local') }}"
+    content_type: "{{ item.content_type | default(omit) }}"
+    checksum: "{{ item.checksum | default(omit) }}"
+    checksum_algorithm: "{{ item.checksum_algorithm | default(omit) }}"
+    src: "{{ item.src | default(omit) }}"
+    url: "{{ item.url | default(omit) }}"
+    template: "{{ item.template | default(omit) }}"
+    timeout: "{{ item.timeout | default('6000') }}"
+    force: "{{ item.force | default(false) }}"
+    state: "{{ item.state | default('present') }}"
+  delegate_to: localhost
+  loop: "{{ pve_media_upload_native }}"
+...

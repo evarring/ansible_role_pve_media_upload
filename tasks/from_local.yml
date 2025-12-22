@@ -1,0 +1,30 @@
+---
+- name: Copy all ISO files from a folder to Proxmox storage
+  block:
+    - name: Synchronize ISO files from folders to Proxmox ISO storage
+      ansible.posix.synchronize:
+        src: "{{ item }}"
+        dest: "{{ pve_media_upload_iso_download_path }}/"
+        mode: push
+        recursive: true
+        rsync_opts:
+          - "--include=*.iso"
+          - "--include=*.ISO"
+          - "--exclude=*"
+          - "--chmod=F644"
+          - "--ignore-existing"
+      loop: "{{ pve_media_upload_local_dirs }}"
+
+    - name: Synchronize template files from folders to Proxmox template storage
+      ansible.posix.synchronize:
+        src: "{{ item }}"
+        dest: "{{ pve_media_upload_template_download_path }}/"
+        mode: push
+        recursive: true
+        rsync_opts:
+          - "--include=*.tar.xz"
+          - "--exclude=*"
+          - "--chmod=F644"
+          - "--ignore-existing"
+      loop: "{{ pve_media_upload_local_dirs }}"
+...

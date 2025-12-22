@@ -1,0 +1,46 @@
+# SPDX-License-Identifier: MIT-0
+---
+# defaults file for ansible_role_pve_media_upload
+
+# Variables for folders on the Proxmox VE server:
+
+pve_media_upload_iso_download_path: "/var/lib/vz/template/iso"
+pve_media_upload_template_download_path: "/var/lib/vz/template/cache"
+pve_media_upload_snippets_folder_path: "/var/lib/vz/snippets"
+
+# Example variables for uploading files to Proxmox VE server
+# content_type default is vztmpl so it can be omitted for lxc templates
+
+#  pve_media_upload_native:
+#    - url: "https://somesite.com/Rocky-10.0-x86_64-minimal.iso"
+#      template: "Rocky-10.0-x86_64-minimal.iso"
+#      checksum: "de75c2f7cc566ea964017a1e94883913f066c4ebeb1d356964e398ed76cadd12"
+#      checksum_algorithm: sha256
+#      content_type: iso
+#    - url: "https://somesite.com/lxc/lxc-rockylinux9.tar.xz"
+#      template: "lxc-rockylinux9.tar.xz"
+#      checksum: "157259825f481a7e21202fe4c110a8a0542dc1ca83eccfb42b52f85db10426b4"
+#      checksum_algorithm: sha256
+#    - src: "/home/user/AlmaLinux-10.0-x86_64-minimal.iso"
+#      template: "AlmaLinux-10.0-x86_64-minimal.iso"
+#      checksum: "e73ccc95ff21a43ab23eebe227257fa34df091570b2bcf8a23f918bf9b662fc3"
+#      checksum_algorithm: sha256
+#      content_type: iso
+
+#  pve_media_upload_local_dirs:
+#    - "/home/user/fulldir"
+
+#  pve_media_upload_smb_shares:
+#    - mount_point: "/mnt/smb_share"
+#      smb_share: "//10.1.1.69/files/ISO/proxmox"
+#      smb_user: "hghjg"
+#      smb_password: "bferfbf"
+
+#  pve_media_upload_snippets:
+#  - src: redhathook.sh.j2
+#    dest: redhathook.sh
+#  - src: ubuntuhook.sh.j2
+#    dest: ubuntuhook.sh
+#  - src: almahook.sh.j2
+#    dest: almahook.sh
+...

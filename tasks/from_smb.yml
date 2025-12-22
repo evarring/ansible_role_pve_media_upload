@@ -1,0 +1,66 @@
+---
+- name: Copy ISO and tar.xz files from an SMB share to Proxmox storage
+  block:
+    - name: Install cifs-utils (if needed)
+      ansible.builtin.package:
+        name: cifs-utils
+        state: present
+
+    - name: Create mount point
+      ansible.builtin.file:
+        path: "{{ item.mount_point }}"
+        state: directory
+        mode: '0755'
+      loop: "{{ pve_media_upload_smb_shares }}"
+      no_log: true
+
+    - name: Mount SMB share
+      ansible.posix.mount:
+        path: "{{ item.mount_point }}"
+        src: "{{ item.smb_share }}"
+        fstype: cifs
+        opts: "username={{ item.smb_user }},password={{ item.smb_password }},rw"
+        state: mounted
+      loop: "{{ pve_media_upload_smb_shares }}"
+      no_log: true
+
+    - name: Synchronize only .iso files
+      ansible.posix.synchronize:
+        src: "{{ item.mount_point }}/"
+        dest: "{{ pve_media_upload_iso_download_path }}/"
+        mode: pull
+        recursive: true
+        rsync_opts:
+          - "--include=*/"
+          - "--include=*.iso"
+          - "--include=*.ISO"
+          - "--exclude=*"
+          - "--ignore-existing"
+      loop: "{{ pve_media_upload_smb_shares }}"
+      become: true
+      delegate_to: "{{ inventory_hostname }}"
+      no_log: true
+
+    - name: Synchronize only .tar.xz files
+      ansible.posix.synchronize:
+        src: "{{ item.mount_point }}/"
+        dest: "{{ pve_media_upload_template_download_path }}/"
+        mode: pull
+        recursive: true
+        rsync_opts:
+          - "--include=*/"
+          - "--include=*.tar.xz"
+          - "--exclude=*"
+          - "--ignore-existing"
+      loop: "{{ pve_media_upload_smb_shares }}"
+      become: true
+      delegate_to: "{{ inventory_hostname }}"
+      no_log: true
+
+    - name: Unmount SMB share
+      ansible.posix.mount:
+        path: "{{ item.mount_point }}"
+        state: unmounted
+      loop: "{{ pve_media_upload_smb_shares }}"
+      no_log: true
+...

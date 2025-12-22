@@ -1,0 +1,27 @@
+---
+- name: Import snippets.yml tasks
+  ansible.builtin.import_tasks:
+    file: snippets.yml
+  when:
+    - pve_media_upload_snippets_folder_path is defined
+    - pve_media_upload_snippets is defined
+  tags: snippets
+
+- name: Import from_smb.yml tasks
+  ansible.builtin.import_tasks:
+    file: from_smb.yml
+  when: pve_media_upload_smb_shares is defined
+  tags: fromsmb
+
+- name: Import from_local.yml tasks
+  ansible.builtin.import_tasks:
+    file: from_local.yml
+  when: pve_media_upload_local_dirs is defined
+  tags: fromlocal
+
+- name: Import native.yml tasks
+  ansible.builtin.import_tasks:
+    file: native.yml
+  when: pve_media_upload_native is defined
+  tags: native
+...
