@@ -4,6 +4,7 @@
     path: "{{ pve_media_upload_snippets_folder_path }}"
     state: directory
     mode: '0755'
+  when: pve_media_upload_snippets | length >0
 
 - name: Template the snippets
   ansible.builtin.template:
